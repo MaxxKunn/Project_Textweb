@@ -11,6 +11,7 @@ class Recipe extends Model
         'ingredients',
         'steps',
         'url',
+        'category',
         'title_cleaned',
         'total_ingredients',
         'ingredients_cleaned',
