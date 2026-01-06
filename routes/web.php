@@ -9,3 +9,4 @@ use App\Http\Controllers\RecipeController;
 Route::get('/', [RecipeController::class, 'home']);
 Route::get('/input', [RecipeController::class, 'input']);
 Route::post('/result', [RecipeController::class, 'result']);
+Route::get('/mba', [RecipeController::class, 'mba']);
