@@ -11,7 +11,7 @@ class RecipeSeeder extends Seeder
     public function run(): void
     {
         // Path to CSV file - adjust if needed
-        $csvPath = storage_path('app/recipes.csv');
+        $csvPath = storage_path('app/my_food_recipes_new.csv');
 
         if (!file_exists($csvPath)) {
             $this->command->error("CSV file not found at: $csvPath");
