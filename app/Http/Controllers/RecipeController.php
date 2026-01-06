@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class RecipeController extends Controller
 {
@@ -20,22 +21,38 @@ class RecipeController extends Controller
     {
         $ingredients = $request->ingredients;
 
-        // sementara dummy dulu
-        $recipes = [
-            [
-                'title' => 'Brownies Kukus',
-                'similarity' => 0.82,
-                'ingredients' => 'telur, tepung, coklat',
-                'steps' => 'Campur bahan lalu kukus'
-            ],
-            [
-                'title' => 'Pancake Coklat',
-                'similarity' => 0.76,
-                'ingredients' => 'telur, tepung, susu',
-                'steps' => 'Campur dan goreng'
-            ]
-        ];
+        // Call API Python
+        $response = \Illuminate\Support\Facades\Http::post('http://localhost:5000/recommend', [
+            'ingredients' => $ingredients
+        ]);
+
+        if ($response->successful()) {
+            $recipes = $response->json();
+        } else {
+            // Fallback dummy jika API gagal
+            $recipes = [
+                [
+                    'title' => 'Error: API tidak tersedia',
+                    'similarity' => 0,
+                    'ingredients' => '',
+                    'steps' => ''
+                ]
+            ];
+        }
 
         return view('result', compact('ingredients', 'recipes'));
+    }
+
+    public function mba()
+    {
+        // Load MBA rules from CSV (assuming file exists)
+        $rules = [];
+        if (file_exists(storage_path('app/mba_rules.csv'))) {
+            $csv = array_map('str_getcsv', file(storage_path('app/mba_rules.csv')));
+            array_shift($csv); // Remove header
+            $rules = $csv;
+        }
+
+        return view('mba', compact('rules'));
     }
 }
